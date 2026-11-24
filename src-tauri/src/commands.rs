@@ -6,10 +6,11 @@ use std::io;
 use std::sync::{Mutex, MutexGuard, OnceLock, PoisonError};
 
 use serde::{Serialize, Serializer};
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Manager, State};
 
 use crate::analysis::{Analysis, Analyzer};
 use crate::dictionary::{DictionaryError, UserDictionary};
+use crate::opened::OpenedFiles;
 
 /// An error from a command. The frontend gets the error message as a string.
 #[derive(Debug, thiserror::Error)]
@@ -115,4 +116,10 @@ pub async fn write_file(
         std::fs::write(&path, contents).map_err(|source| CommandError::Write { path, source })
     })
     .await
+}
+
+/// Gives the paths of the files that the app was asked to open, and removes them.
+#[tauri::command]
+pub fn take_opened_files(files: State<'_, OpenedFiles>) -> Vec<String> {
+    files.take()
 }
