@@ -6,6 +6,10 @@ out
 dist
 *.tgz
 
+# tauri
+src-tauri/target
+src-tauri/gen/schemas
+
 # code coverage
 coverage
 *.lcov
