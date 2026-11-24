@@ -1,39 +1,142 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
-  --font-mono: "SF Mono", ui-monospace, Menlo, "JetBrains Mono", Consolas, monospace;
+  --font-mono: "MonoLisaCode", "MonoLisa", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-sans: var(--font-mono);
 
-  --color-paper: #f7f4ee;
-  --color-paper-shade: #efebe3;
-  --color-ink: #24211d;
-  --color-ink-faint: #8a8378;
-  --color-rule: #ddd6ca;
-  --color-accent: #c9a227;
+  --color-bg: #f7f0e4;
+  --color-bg-2: #efe5d5;
+  --color-bg-3: #e6d9c4;
+  --color-bg-4: #d8c7ac;
+  --color-rule: #e0d2bb;
+  --color-fg: #22170d;
+  --color-fg-dim: #6b563f;
+  --color-fg-faint: #a48e74;
+  --color-accent: #9c6210;
+  --color-accent-ink: #fbf5ea;
+  --color-edit: #a54a1f;
+
+  --color-hard: rgb(220 165 40 / 0.28);
+  --color-very-hard: rgb(210 85 60 / 0.22);
+  --color-adverb: #2c69a6;
+  --color-passive: #467f2c;
+  --color-wordy: #8446b3;
+  --color-spelling: #c4321f;
+  --color-grammar: #127d70;
+
+  --color-syn-kw: #a8501a;
+  --color-syn-str: #4f7a26;
+  --color-syn-fn: #285f94;
+  --color-syn-type: #8a6206;
+  --color-syn-num: #7a3fa6;
+  --color-syn-com: #a48e74;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-paper: #1b1a18;
-    --color-paper-shade: #222120;
-    --color-ink: #e6e1d8;
-    --color-ink-faint: #7d776d;
-    --color-rule: #34322e;
-    --color-accent: #e0bb45;
-  }
+:root.dark {
+  --color-bg: #15100b;
+  --color-bg-2: #1c150f;
+  --color-bg-3: #261d15;
+  --color-bg-4: #33271c;
+  --color-rule: #2e241a;
+  --color-fg: #f1e6d2;
+  --color-fg-dim: #b3a189;
+  --color-fg-faint: #75644f;
+  --color-accent: #e6ad4e;
+  --color-accent-ink: #1a120a;
+  --color-edit: #d98a5f;
+
+  --color-hard: rgb(230 173 78 / 0.2);
+  --color-very-hard: rgb(222 96 72 / 0.26);
+  --color-adverb: #7fa6cf;
+  --color-passive: #93bb76;
+  --color-wordy: #bb92da;
+  --color-spelling: #ee6e58;
+  --color-grammar: #5fbfae;
+
+  --color-syn-kw: #e09a5a;
+  --color-syn-str: #a7c080;
+  --color-syn-fn: #8fb4d8;
+  --color-syn-type: #e6c36e;
+  --color-syn-num: #c49bd9;
+  --color-syn-com: #75644f;
 }
 
 html,
-body {
+body,
+#root {
   height: 100%;
+  margin: 0;
+  overflow: hidden;
 }
 
 body {
-  margin: 0;
+  font-family: var(--font-mono);
+  background: var(--color-bg);
+  color: var(--color-fg);
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  user-select: none;
+  cursor: default;
 }
 
-::selection {
-  background-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+* {
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+button {
+  cursor: default;
+}
+
+.mark {
+  border-radius: 2px;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    text-decoration-color 0.15s;
+}
+
+.mark-hard {
+  background: var(--color-hard);
+}
+
+.mark-veryHard {
+  background: var(--color-very-hard);
+}
+
+.mark-adverb {
+  border-bottom: 2px solid var(--color-adverb);
+}
+
+.mark-passive {
+  border-bottom: 2px solid var(--color-passive);
+}
+
+.mark-wordy {
+  border-bottom: 2px solid var(--color-wordy);
+}
+
+.mark-spelling,
+.mark-grammar {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-thickness: 1.5px;
+  text-decoration-skip-ink: none;
+  text-underline-offset: 4px;
+}
+
+.mark-spelling {
+  text-decoration-color: var(--color-spelling);
+}
+
+.mark-grammar {
+  text-decoration-color: var(--color-grammar);
+}
+
+[data-focus] .mark:not(.mark-focused) {
+  background: transparent;
+  border-bottom-color: transparent;
+  text-decoration-color: transparent;
 }
