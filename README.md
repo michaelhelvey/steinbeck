@@ -55,8 +55,24 @@ use `bun run build`.
 bun run validate
 ```
 
-This runs format, lint, type check, and `bun test`. For the Rust code, run `cargo check` in
-`src-tauri/`.
+This runs format, lint, type check, and `bun test`, then the Rust checks: `bun run check:rust`
+(`cargo fmt --check` and `cargo clippy -- -D warnings`) and `bun run test:rust` (`cargo test`).
+
+`bun run bench:rust` runs the analysis performance test in release mode. It analyzes a 4,500-word
+Markdown document and prints the time for a cold analysis and for an analysis after one edit.
+
+## Backend
+
+The analysis engine is in `src-tauri/src/analysis/`. It finds hard sentences, adverbs, passive
+voice, wordy phrases, and (with [Harper](https://writewithharper.com)) spelling and grammar errors.
+It analyzes only prose: it ignores code, URLs, raw HTML, and YAML front matter. It keeps a cache of
+each top-level Markdown block, so an analysis after a small edit is fast.
+
+User dictionary words are in `dictionary.txt` in the app data directory (on macOS,
+`~/Library/Application Support/com.helvetici.steinbeck/`), one word on each line.
+
+The app opens `.md` and `.markdown` files from Finder ("Open With"), from
+`open -a Steinbeck file.md`, and from file paths given as command-line arguments.
 
 ## Regenerate the icons
 
