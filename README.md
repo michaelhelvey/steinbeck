@@ -1,86 +1,115 @@
-# Steinbeck
+<p align="center">
+  <img src="assets/icon.png" alt="Steinbeck icon" width="128" height="128" />
+</p>
 
-A calm markdown writing app. Steinbeck has an editor pane and a sidebar that shows problems in your
-prose (long sentences, weak grammar, and similar).
+<h1 align="center">Steinbeck</h1>
 
-The app is a [Tauri 2](https://tauri.app) desktop app. The frontend is
-[SolidJS 2](https://docs.solidjs.com) with [Tailwind CSS v4](https://tailwindcss.com), served and
-built by [Vite+](https://viteplus.dev) (`vp`). The backend is Rust.
+<p align="center">
+  <em>A quiet markdown editor that tells you the truth about your sentences.</em>
+</p>
 
-## Layout
+<p align="center">
+  <img src="assets/screenshot.png" alt="Steinbeck in edit mode, with a spelling popover open" />
+</p>
 
-| Path                     | Contents                                       |
-| ------------------------ | ---------------------------------------------- |
-| `index.html`, `src/`     | Frontend (Solid components, styles)            |
-| `src-tauri/`             | Rust backend and Tauri configuration           |
-| `assets/icon.svg`        | Source for the app icon                        |
-| `scripts/render-icon.ts` | Renders the icon and generates all icon sizes  |
-| `vite.config.ts`         | Vite, lint, and format configuration for Vite+ |
+Steinbeck is a native macOS markdown editor with two modes:
 
-## Requirements
+- **Write mode** shows only your text. There are no marks and no sidebar.
+- **Edit mode** (`⌘E`) marks the problems in your prose and shows a readability score.
 
-- [Bun](https://bun.sh)
-- Rust and Cargo (see the [Tauri prerequisites](https://tauri.app/start/prerequisites/))
+Steinbeck does not write for you. It shows where the writing is weak, and you fix it.
 
-Install the dependencies:
+## Install
+
+You need [Bun](https://bun.sh) and [Rust](https://rustup.rs). Then run one command:
 
 ```sh
-bun install
+bun run setup
 ```
+
+This command:
+
+1. Installs the dependencies and builds a release version of the app.
+2. Copies `Steinbeck.app` to `/Applications` (or `~/Applications` if you cannot write to
+   `/Applications`).
+3. Adds a `steinbeck` shell function to `~/.zshrc`, between `# >>> steinbeck >>>` marker lines. If
+   you run setup again, it replaces that block. It does not add a second one.
+
+Open a new terminal, then:
+
+```sh
+steinbeck draft.md        # open a file (Steinbeck creates it if it does not exist)
+steinbeck a.md b.md       # open more than one file
+steinbeck                 # open the app
+```
+
+To update, pull the latest code and run `bun run setup` again.
+
+## What edit mode shows
+
+| Mark                | Meaning                                                  |
+| ------------------- | -------------------------------------------------------- |
+| Yellow background   | Hard sentence: it scores grade 10–13 on its own          |
+| Red background      | Very hard sentence: grade 14 or higher                   |
+| Blue underline      | Adverb. Use a stronger verb, or cut it                   |
+| Green underline     | Passive voice                                            |
+| Purple underline    | Wordy phrase or filler, often with a simpler alternative |
+| Red wavy underline  | Spelling (from [Harper](https://writewithharper.com))    |
+| Teal wavy underline | Grammar (from Harper)                                    |
+
+Click a mark to see the problem and its fixes. A spelling error also has `+ dictionary`. Hover a
+category in the sidebar to show only its marks. Click the category to turn it off.
+
+The readability score is the [Automated Readability Index][ari]. It counts characters, not
+syllables, so the same text always gets the same score. Hover any number in the sidebar to see what
+it means.
+
+Steinbeck analyzes only prose. It ignores code blocks, inline code, URLs, raw HTML, and YAML front
+matter.
+
+[ari]: https://en.wikipedia.org/wiki/Automated_readability_index
+
+## Keyboard shortcuts
+
+| Keys  | Action                   |
+| ----- | ------------------------ |
+| `⌘E`  | Switch write / edit mode |
+| `⌘O`  | Open                     |
+| `⌘S`  | Save                     |
+| `⌘⇧S` | Save as                  |
+| `⌘N`  | New document             |
+| `⌘F`  | Find and replace         |
+| `Esc` | Close the issue popover  |
 
 ## Develop
 
-Start the app with hot reload:
-
 ```sh
-bun run tauri dev
+bun install
+bun run tauri dev         # app with hot reload (Vite on http://localhost:1420)
+bun run validate          # format, lint, type check, tests, cargo fmt/clippy/test
+bun run bench:rust        # analysis speed on a 4,500-word document, release build
 ```
 
-This starts the Vite dev server on `http://localhost:1420` and opens the app window. To work on the
-frontend in a browser only, use `bun run dev`.
+| Path                     | Contents                                                      |
+| ------------------------ | ------------------------------------------------------------- |
+| `src/`                   | Frontend: Solid 2, Tailwind 4, CodeMirror 6                   |
+| `src/editor/`            | Editor setup, theme, and the marks that follow your edits     |
+| `src-tauri/src/analysis` | Analysis engine: prose extraction, style rules, Harper, stats |
+| `src-tauri/src/`         | Tauri commands, user dictionary, files opened from macOS      |
+| `scripts/setup.ts`       | The `bun run setup` installer                                 |
+| `scripts/render-icon.ts` | Renders `assets/icon.svg` and generates all icon sizes        |
+| `design/mockup.html`     | The original design mockup. Open it in a browser              |
 
-## Build
+### Backend notes
 
-```sh
-bun run tauri build           # release bundle (.app and .dmg on macOS)
-bun run tauri build --debug   # debug bundle, faster to compile
-```
-
-The bundles are in `src-tauri/target/<profile>/bundle/`. To build only the frontend into `dist/`,
-use `bun run build`.
-
-## Validate
-
-```sh
-bun run validate
-```
-
-This runs format, lint, type check, and `bun test`, then the Rust checks: `bun run check:rust`
-(`cargo fmt --check` and `cargo clippy -- -D warnings`) and `bun run test:rust` (`cargo test`).
-
-`bun run bench:rust` runs the analysis performance test in release mode. It analyzes a 4,500-word
-Markdown document and prints the time for a cold analysis and for an analysis after one edit.
-
-## Backend
-
-The analysis engine is in `src-tauri/src/analysis/`. It finds hard sentences, adverbs, passive
-voice, wordy phrases, and (with [Harper](https://writewithharper.com)) spelling and grammar errors.
-It analyzes only prose: it ignores code, URLs, raw HTML, and YAML front matter. It keeps a cache of
-each top-level Markdown block, so an analysis after a small edit is fast.
-
-User dictionary words are in `dictionary.txt` in the app data directory (on macOS,
-`~/Library/Application Support/com.helvetici.steinbeck/`), one word on each line.
+The analysis engine keeps a cache of each top-level markdown block, so an analysis after one edit
+takes about 8 ms. User dictionary words are in
+`~/Library/Application Support/com.helvetici.steinbeck/dictionary.txt`, one word on each line.
 
 The app opens `.md` and `.markdown` files from Finder ("Open With"), from
 `open -a Steinbeck file.md`, and from file paths given as command-line arguments.
 
-## Regenerate the icons
+### Regenerate the icons
 
-Edit `assets/icon.svg`, then run:
-
-```sh
-bun run icons
-```
-
-This renders `assets/icon.png` (1024x1024) and runs `tauri icon`, which writes all sizes into
-`src-tauri/icons/`. Commit the SVG, the PNG, and the generated icons.
+Edit `assets/icon.svg`, then run `bun run icons`. This renders `assets/icon.png` and writes all
+sizes into `src-tauri/icons/`. Commit the SVG, the PNG, and the generated icons.
