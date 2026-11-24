@@ -73,8 +73,9 @@ export function createDocument(
   }
 
   async function openPath(target: string) {
-    if (target === path() || !(await confirmLeave())) return;
-    replace(target, await backend.readFile(target));
+    const normalized = target.normalize("NFC");
+    if (normalized === path() || !(await confirmLeave())) return;
+    replace(normalized, await backend.readFile(normalized));
   }
 
   return {
