@@ -22,6 +22,8 @@ log = "0.4"
 tauri = { version = "2.12.7", features = [] }
 tauri-plugin-log = "2"
 harper-core = { version = "3.2.0", default-features = false, features = ["concurrent"] }
+tauri-plugin-dialog = "2.8.4"
+thiserror = "2.0.21"
 pulldown-cmark = { version = "0.13", default-features = false }
 
 [profile.dev.package.harper-core]
