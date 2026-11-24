@@ -9,6 +9,7 @@
     "build": "vp build",
     "preview": "vp preview",
     "tauri": "tauri",
+    "icons": "bun scripts/render-icon.ts",
     "format": "vp fmt",
     "lint": "vp lint --fix",
     "check": "vp check",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@michaelhelvey/vite-config": "2.0.4",
+    "@resvg/resvg-js": "^2.6.2",
     "@solidjs/vite-plugin": "3.0.1",
     "@tailwindcss/vite": "^4.3.5",
     "@tauri-apps/cli": "^2.12.6",

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#302b26"/>
+      <stop offset="1" stop-color="#161412"/>
+    </linearGradient>
+    <linearGradient id="nib" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fdf9f1"/>
+      <stop offset="1" stop-color="#ddd3c0"/>
+    </linearGradient>
+    <linearGradient id="hl" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e3ae27" stop-opacity="0.75"/>
+      <stop offset="0.35" stop-color="#efc23f"/>
+      <stop offset="1" stop-color="#f6d260"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="-6" dy="20" stdDeviation="20" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <rect x="100" y="100" width="824" height="824" rx="185" ry="185" fill="url(#bg)"/>
+
+  <path d="M226 690 C 340 680, 480 676, 640 678 L 734 678 L 712 756 L 620 756 C 470 756, 340 760, 204 770 Z"
+        fill="url(#hl)"/>
+
+  <g transform="translate(24 -26) rotate(-38 512 512)" filter="url(#shadow)">
+    <path d="M512 800 C 476 720, 392 600, 384 480 L 384 300 Q 384 268 416 268 L 608 268 Q 640 268 640 300 L 640 480 C 632 600, 548 720, 512 800 Z"
+          fill="url(#nib)"/>
+    <path d="M384 300 Q 384 268 416 268 L 608 268 Q 640 268 640 300 L 640 336 L 384 336 Z" fill="#c4b8a1"/>
+    <path d="M384 336 L 640 336" stroke="#a99c84" stroke-width="4"/>
+    <path d="M428 390 C 436 480, 466 548, 498 602" fill="none" stroke="#cbbfa9" stroke-width="7" stroke-linecap="round"/>
+    <path d="M596 390 C 588 480, 558 548, 526 602" fill="none" stroke="#cbbfa9" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="512" cy="500" r="24" fill="#1d1b18"/>
+    <path d="M512 524 L 512 792" stroke="#1d1b18" stroke-width="9" stroke-linecap="round"/>
+  </g>
+</svg>
