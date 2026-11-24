@@ -38,10 +38,3 @@ names against `node_modules/solid-js/CHEATSHEET.md`.
   test which cannot be trivially derived from the literal tokens in the code.
 - Do not write code that requires module mocks in order to test -- use proper dependency injection.
   Creating `mock` functions from `bun:test` in order to assert how they are called is allowed.
-
-## Github / Collaboration Rules
-
-- Don't make git commits unless you're in a worktree or I ask you to. If you're not in a worktree,
-  that means that you are working collaboratively with me and other agents.
-- Outside of a worktree, other agents and humans will be working with you in the same working tree.
-  Do not change unrelated files or step on their work.

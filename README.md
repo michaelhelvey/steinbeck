@@ -5,7 +5,7 @@
 <h1 align="center">Steinbeck</h1>
 
 <p align="center">
-  <em>A quiet markdown editor that tells you the truth about your sentences.</em>
+  <em>Slop to help you write less slop.</em>
 </p>
 
 <p align="center">
@@ -17,7 +17,8 @@ Steinbeck is a native macOS markdown editor with two modes:
 - **Write mode** shows only your text. There are no marks and no sidebar.
 - **Edit mode** (`⌘E`) marks the problems in your prose and shows a readability score.
 
-Steinbeck does not write for you. It shows where the writing is weak, and you fix it.
+100% of features are local. None of your data is sent to a remote server, and no LLMs are involved
+in editing your text.
 
 ## Install
 
