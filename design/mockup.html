@@ -1,0 +1,1178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Steinbeck — mockup</title>
+    <style>
+      :root {
+        --font: "MonoLisaCode", "MonoLisa", ui-monospace, "SF Mono", Menlo, monospace;
+      }
+
+      body.dark {
+        --bg: #15100b;
+        --bg-2: #1c150f;
+        --bg-3: #261d15;
+        --bg-4: #33271c;
+        --rule: #2e241a;
+        --fg: #f1e6d2;
+        --fg-dim: #b3a189;
+        --fg-faint: #75644f;
+        --accent: #e6ad4e;
+        --accent-ink: #1a120a;
+        --edit: #d98a5f;
+
+        --hard: rgba(230, 173, 78, 0.2);
+        --vhard: rgba(222, 96, 72, 0.26);
+        --adv: #7fa6cf;
+        --pas: #93bb76;
+        --wordy: #bb92da;
+        --spell: #ee6e58;
+        --gram: #5fbfae;
+
+        --syn-kw: #e09a5a;
+        --syn-str: #a7c080;
+        --syn-fn: #8fb4d8;
+        --syn-type: #e6c36e;
+        --syn-num: #c49bd9;
+        --syn-com: #75644f;
+      }
+
+      body.light {
+        --bg: #f7f0e4;
+        --bg-2: #efe5d5;
+        --bg-3: #e6d9c4;
+        --bg-4: #d8c7ac;
+        --rule: #e0d2bb;
+        --fg: #22170d;
+        --fg-dim: #6b563f;
+        --fg-faint: #a48e74;
+        --accent: #9c6210;
+        --accent-ink: #fbf5ea;
+        --edit: #a54a1f;
+
+        --hard: rgba(220, 165, 40, 0.28);
+        --vhard: rgba(210, 85, 60, 0.22);
+        --adv: #2c69a6;
+        --pas: #467f2c;
+        --wordy: #8446b3;
+        --spell: #c4321f;
+        --gram: #127d70;
+
+        --syn-kw: #a8501a;
+        --syn-str: #4f7a26;
+        --syn-fn: #285f94;
+        --syn-type: #8a6206;
+        --syn-num: #7a3fa6;
+        --syn-com: #a48e74;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+      }
+
+      body {
+        font-family: var(--font);
+        font-size: 14px;
+        background: var(--bg);
+        color: var(--fg);
+        display: grid;
+        grid-template-rows: 32px 1fr 24px;
+        overflow: hidden;
+        -webkit-font-smoothing: antialiased;
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+
+      * {
+        scrollbar-width: none;
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+
+      button {
+        font: inherit;
+        color: inherit;
+        background: none;
+        border: 0;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      /* ---------- title bar ---------- */
+      .titlebar {
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        border-bottom: 1px solid var(--rule);
+        background: var(--bg);
+        font-size: 12px;
+        color: var(--fg-faint);
+        user-select: none;
+      }
+      .lights {
+        display: flex;
+        gap: 8px;
+        width: 120px;
+      }
+      .lights i {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--bg-4);
+      }
+      .titlebar .name {
+        flex: 1;
+        text-align: center;
+      }
+      .titlebar .name b {
+        color: var(--fg-dim);
+        font-weight: 400;
+      }
+      .titlebar .tools {
+        width: 120px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 14px;
+      }
+      .titlebar .tools button {
+        color: var(--fg-faint);
+      }
+      .titlebar .tools button:hover {
+        color: var(--fg);
+      }
+
+      /* ---------- main ---------- */
+      .main {
+        display: flex;
+        min-height: 0;
+      }
+
+      .scroll {
+        flex: 1;
+        overflow-y: auto;
+        min-width: 0;
+      }
+
+      .doc {
+        max-width: 74ch;
+        margin: 0 auto;
+        padding: 56px 4ch 30vh;
+        font-size: 15px;
+        line-height: 1.75;
+        position: relative;
+      }
+
+      .blk {
+        position: relative;
+        margin: 0 0 1.75em;
+        white-space: pre-wrap;
+        border-radius: 3px;
+        transition: background 0.15s;
+      }
+
+      .md {
+        color: var(--fg-faint);
+      }
+      .h1,
+      .h2 {
+        font-weight: 700;
+        color: var(--accent);
+      }
+      strong {
+        font-weight: 700;
+        color: var(--fg);
+      }
+      em {
+        font-style: italic;
+      }
+      .quote {
+        color: var(--fg-dim);
+        font-style: italic;
+      }
+      .li {
+        padding-left: 2ch;
+        text-indent: -2ch;
+        margin-bottom: 0.2em;
+      }
+      .list {
+        margin-bottom: 1.75em;
+      }
+      .ic {
+        color: var(--syn-str);
+      }
+      .link-text {
+        color: var(--fg);
+        text-decoration: underline;
+        text-decoration-color: var(--fg-faint);
+        text-underline-offset: 3px;
+      }
+      .url {
+        color: var(--fg-faint);
+      }
+
+      .code {
+        background: var(--bg-2);
+        padding: 0.2em 1.5ch;
+        margin-left: -1.5ch;
+        margin-right: -1.5ch;
+        line-height: 1.6;
+        font-size: 14px;
+      }
+      .kw {
+        color: var(--syn-kw);
+      }
+      .str {
+        color: var(--syn-str);
+      }
+      .fn {
+        color: var(--syn-fn);
+      }
+      .ty {
+        color: var(--syn-type);
+      }
+      .num {
+        color: var(--syn-num);
+      }
+      .com {
+        color: var(--syn-com);
+        font-style: italic;
+      }
+
+      .caret {
+        display: inline-block;
+        width: 2px;
+        height: 1.2em;
+        background: var(--accent);
+        vertical-align: -0.2em;
+        animation: blink 1.1s steps(1) infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      /* ---------- marks (edit mode only) ---------- */
+      .m {
+        border-radius: 2px;
+        text-underline-offset: 4px;
+        transition:
+          background 0.15s,
+          border-color 0.15s,
+          text-decoration-color 0.15s,
+          opacity 0.15s;
+      }
+
+      body.edit .m {
+        cursor: pointer;
+      }
+      body.edit .m.hard {
+        background: var(--hard);
+      }
+      body.edit .m.vhard {
+        background: var(--vhard);
+      }
+      body.edit .m.adv {
+        border-bottom: 2px solid var(--adv);
+      }
+      body.edit .m.pas {
+        border-bottom: 2px solid var(--pas);
+      }
+      body.edit .m.wordy {
+        border-bottom: 2px solid var(--wordy);
+      }
+      body.edit .m.spell {
+        text-decoration: underline wavy var(--spell);
+        text-decoration-thickness: 1.5px;
+        text-decoration-skip-ink: none;
+      }
+      body.edit .m.gram {
+        text-decoration: underline wavy var(--gram);
+        text-decoration-thickness: 1.5px;
+        text-decoration-skip-ink: none;
+      }
+
+      body.edit .m.off,
+      body.edit[data-focus] .m:not(.lit) {
+        background: transparent;
+        border-bottom-color: transparent;
+        text-decoration-color: transparent;
+      }
+
+      /* ---------- sidebar ---------- */
+      .side {
+        width: 0;
+        overflow: hidden;
+        background: var(--bg-2);
+        border-left: 1px solid var(--rule);
+        transition: width 0.22s ease;
+        flex-shrink: 0;
+      }
+      body.edit .side {
+        width: 340px;
+      }
+      body.write .side {
+        border-left-color: transparent;
+      }
+
+      .side-inner {
+        width: 340px;
+        height: 100%;
+        overflow-y: auto;
+        padding: 20px 22px 40px;
+        font-size: 12.5px;
+      }
+
+      .sec {
+        margin-bottom: 28px;
+      }
+      .sec-h {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--fg-faint);
+        border-bottom: 1px solid var(--rule);
+        padding-bottom: 6px;
+        margin-bottom: 12px;
+      }
+      .sec-h button {
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--fg-dim);
+      }
+      .sec-h button:hover {
+        color: var(--accent);
+      }
+
+      .grade {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+      }
+      .grade .n {
+        font-size: 44px;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--accent);
+      }
+      .grade .lbl {
+        color: var(--fg-dim);
+      }
+      .grade .lbl b {
+        color: var(--fg);
+        font-weight: 400;
+        display: block;
+      }
+      .meter {
+        margin: 12px 0 4px;
+        letter-spacing: 1px;
+        font-size: 13px;
+        white-space: pre;
+      }
+      .meter .f {
+        color: var(--accent);
+      }
+      .meter .e {
+        color: var(--bg-4);
+      }
+      .meter .t {
+        color: var(--fg);
+      }
+      .meter-scale {
+        display: flex;
+        justify-content: space-between;
+        color: var(--fg-faint);
+        font-size: 10.5px;
+      }
+      .alts {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 3px 12px;
+        color: var(--fg-dim);
+      }
+      .alts span:nth-child(even) {
+        color: var(--fg);
+        text-align: right;
+      }
+      .alts .hl {
+        color: var(--accent) !important;
+      }
+
+      .cat {
+        display: flex;
+        align-items: baseline;
+        width: 100%;
+        padding: 4px 0;
+        text-align: left;
+        gap: 8px;
+      }
+      .cat .box {
+        color: var(--fg-faint);
+        width: 3ch;
+      }
+      .cat .lead {
+        flex: 1;
+        overflow: hidden;
+        color: var(--bg-4);
+        white-space: nowrap;
+      }
+      .cat .lead::after {
+        content: " ................................................................";
+      }
+      .cat .cnt {
+        color: var(--fg);
+        min-width: 2ch;
+        text-align: right;
+      }
+      .cat.off .sample,
+      .cat.off .cnt {
+        opacity: 0.35;
+        text-decoration: line-through;
+      }
+      .cat:hover .box {
+        color: var(--accent);
+      }
+      .cat-group {
+        color: var(--fg-faint);
+        font-size: 10.5px;
+        margin: 10px 0 2px;
+      }
+      .cat-group:first-of-type {
+        margin-top: 0;
+      }
+
+      .sample {
+        padding: 0 1px;
+        border-radius: 2px;
+        text-underline-offset: 4px;
+      }
+      .sample.hard {
+        background: var(--hard);
+      }
+      .sample.vhard {
+        background: var(--vhard);
+      }
+      .sample.adv {
+        border-bottom: 2px solid var(--adv);
+      }
+      .sample.pas {
+        border-bottom: 2px solid var(--pas);
+      }
+      .sample.wordy {
+        border-bottom: 2px solid var(--wordy);
+      }
+      .sample.spell {
+        text-decoration: underline wavy var(--spell);
+        text-decoration-skip-ink: none;
+      }
+      .sample.gram {
+        text-decoration: underline wavy var(--gram);
+        text-decoration-skip-ink: none;
+      }
+
+      [data-tip] {
+        cursor: help;
+      }
+      [data-tip]:hover {
+        text-decoration: underline dotted var(--fg-faint);
+        text-underline-offset: 3px;
+      }
+      .grade[data-tip]:hover,
+      .meter[data-tip]:hover {
+        text-decoration: none;
+      }
+
+      .tip {
+        position: fixed;
+        z-index: 20;
+        width: 300px;
+        background: var(--bg-3);
+        border: 1px solid var(--bg-4);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        padding: 10px 12px;
+        font-size: 12px;
+        line-height: 1.55;
+        color: var(--fg-dim);
+        pointer-events: none;
+        display: none;
+      }
+      .tip.show {
+        display: block;
+      }
+      .tip b {
+        color: var(--fg);
+        font-weight: 700;
+        display: block;
+        margin-bottom: 4px;
+      }
+      .tip .row {
+        display: grid;
+        grid-template-columns: 7ch 1fr;
+        gap: 0 1ch;
+      }
+      .tip .row span:first-child {
+        color: var(--accent);
+      }
+      .tip p {
+        margin: 6px 0 0;
+      }
+
+      /* ---------- popover ---------- */
+      .pop {
+        position: fixed;
+        z-index: 10;
+        width: 340px;
+        background: var(--bg-3);
+        border: 1px solid var(--bg-4);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        padding: 10px 12px;
+        font-size: 12.5px;
+        line-height: 1.55;
+        display: none;
+      }
+      .pop.show {
+        display: block;
+      }
+      .pop .t {
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+      .pop .msg {
+        color: var(--fg-dim);
+      }
+      .pop .acts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
+      }
+      .pop .acts button {
+        padding: 2px 8px;
+        background: var(--bg-2);
+        border: 1px solid var(--bg-4);
+      }
+      .pop .acts button.fix {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+      .pop .acts button:hover {
+        background: var(--bg);
+      }
+      .pop .src {
+        color: var(--fg-faint);
+        font-size: 10.5px;
+        margin-top: 8px;
+      }
+
+      /* ---------- statusline ---------- */
+      .status {
+        display: flex;
+        align-items: stretch;
+        background: var(--bg-2);
+        font-size: 12px;
+        line-height: 24px;
+        user-select: none;
+        white-space: nowrap;
+      }
+      .seg {
+        padding: 0 1.2ch;
+      }
+      .seg.mode {
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        background: var(--accent);
+        color: var(--accent-ink);
+        cursor: pointer;
+      }
+      body.edit .seg.mode {
+        background: var(--edit);
+      }
+      .seg.b {
+        background: var(--bg-4);
+        color: var(--fg);
+      }
+      .seg.c {
+        color: var(--fg-dim);
+      }
+      .seg.c .mod {
+        color: var(--accent);
+      }
+      .arrow {
+        width: 10px;
+        background: var(--to);
+        position: relative;
+      }
+      .arrow::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--from);
+        clip-path: polygon(0 0, 100% 50%, 0 100%);
+      }
+      .arrow.l::before {
+        clip-path: polygon(100% 0, 0 50%, 100% 100%);
+      }
+      .spacer {
+        flex: 1;
+      }
+      .status .dot {
+        color: var(--fg-faint);
+        padding: 0 0.6ch;
+      }
+      .edit-only {
+        display: none !important;
+      }
+      body.edit .edit-only {
+        display: flex !important;
+      }
+      body.edit span.edit-only {
+        display: inline !important;
+      }
+      .issues .e {
+        color: var(--spell);
+      }
+      .issues .w {
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body class="dark write">
+    <div class="titlebar">
+      <div class="lights"><i></i><i></i><i></i></div>
+      <div class="name"><b>on-cutting.md</b> — ~/writing/essays</div>
+      <div class="tools">
+        <button id="themeBtn" title="toggle theme">◐ theme</button>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="scroll" id="scroll">
+        <div class="doc" id="doc">
+          <div class="blk">
+            <span class="h1"><span class="md"># </span>On Cutting</span>
+          </div>
+
+          <div class="blk">
+            Every draft begins <span class="md">**</span><strong>too long</strong
+            ><span class="md">**</span>. That is not a failure; it is the material you cut from.
+            <span class="m vhard" data-id="s1"
+              >It <span class="m pas" data-id="p1">is believed</span> by most writers that the first
+              draft, which <span class="m pas" data-id="p2">is written</span>
+              <span class="m adv" data-id="a1">quickly</span> and without
+              <span class="m wordy" data-id="w1">very much</span> attention to the structure of the
+              argument or the rhythm of the sentences,
+              <span class="m pas" data-id="p3">should be revised</span>
+              <span class="m adv" data-id="a2">extensively</span> before anyone sees it.</span
+            >
+          </div>
+
+          <div class="blk">
+            I <span class="md">*</span><em><span class="m adv" data-id="a3">really</span></em
+            ><span class="md">*</span> think <span class="m spell" data-id="sp1">teh</span> problem
+            is simpler <span class="m gram" data-id="g1">then</span> that. Most bad sentences are
+            bad because the writer did not yet know what they meant.
+            <span class="m hard" data-id="s2"
+              >The sentence <span class="m pas" data-id="p4">was written</span> before the thought
+              was finished, and so the reader <span class="m pas" data-id="p5">is asked</span> to do
+              the work that the writer avoided.</span
+            >
+          </div>
+
+          <div class="blk quote">
+            <span class="md">&gt; </span>The best sentence is the one you never had to explain.
+          </div>
+
+          <div class="blk">
+            <span class="h2"><span class="md">## </span>A small checklist</span>
+          </div>
+
+          <div class="list">
+            <div class="li">
+              <span class="md">- </span>Cut every adverb that a stronger verb could replace.
+            </div>
+            <div class="li">
+              <span class="md">- </span>Read it <span class="md">**</span><strong>out loud</strong
+              ><span class="md">**</span>. If you run out of breath, the
+              <span class="m spell" data-id="sp2">sentance</span> is too long.
+            </div>
+            <div class="li">
+              <span class="md">- </span>Look for <span class="md">`</span><span class="ic">is</span
+              ><span class="md">`</span>, <span class="md">`</span><span class="ic">was</span
+              ><span class="md">`</span>, and <span class="md">`</span><span class="ic">were</span
+              ><span class="md">`</span> followed by a past participle.
+            </div>
+            <div class="li">
+              <span class="md">- </span><span class="m gram" data-id="g2">Their are</span> always
+              more words to cut.
+            </div>
+          </div>
+
+          <div class="blk">
+            <span class="h2"><span class="md">## </span>Tools</span>
+          </div>
+
+          <div class="blk">
+            I <span class="m wordy" data-id="w2">utilize</span> a small script to run the rules on
+            any draft<span class="m gram" data-id="g3">, see</span> <span class="md">[</span
+            ><span class="link-text">the source</span><span class="md">](</span
+            ><span class="url">https://example.com/cut</span><span class="md">)</span> for details.
+          </div>
+
+          <div class="blk code" data-code>
+            <span class="md">```ts</span> <span class="kw">const</span> adverbs =
+            <span class="str">/\b\w+ly\b/g</span>;
+
+            <span class="com">// One match per adverb. Zero when there are none.</span>
+            <span class="kw">export function</span> <span class="fn">countAdverbs</span>(text:
+            <span class="ty">string</span>): <span class="ty">number</span> {
+            <span class="kw">return</span> text.<span class="fn">match</span>(adverbs)?.length ??
+            <span class="num">0</span>; } <span class="md">```</span>
+          </div>
+
+          <div class="blk">
+            <span class="m hard" data-id="s3"
+              >In the end, it is <span class="m adv" data-id="a4">basically</span>
+              <span class="m wordy" data-id="w3">just</span> a matter of deleting things until what
+              remains is true, which is <span class="m adv" data-id="a5">honestly</span> harder than
+              it sounds.</span
+            ><span class="caret" id="caret"></span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="side">
+        <div class="side-inner">
+          <div class="sec">
+            <div class="sec-h"><span>Readability</span><span id="metricName">ARI</span></div>
+            <div class="grade" data-tip="grade">
+              <div class="n" id="gradeN">9</div>
+              <div class="lbl">
+                <b id="gradeLbl">Grade 9</b>target ≤ <span id="targetN">8</span>
+              </div>
+            </div>
+            <div class="meter" id="meter" data-tip="meter"></div>
+            <div class="meter-scale"><span>1</span><span>8</span><span>16+</span></div>
+            <div class="alts" id="alts"></div>
+          </div>
+
+          <div class="sec">
+            <div class="sec-h"><span>Lint</span><span>deterministic</span></div>
+            <div class="cat-group">sentences</div>
+            <button class="cat" data-cat="vhard">
+              <span class="box">[x]</span
+              ><span class="sample vhard" data-tip="vhard">very hard</span><span class="lead"></span
+              ><span class="cnt"></span>
+            </button>
+            <button class="cat" data-cat="hard">
+              <span class="box">[x]</span><span class="sample hard" data-tip="hard">hard</span
+              ><span class="lead"></span><span class="cnt"></span>
+            </button>
+            <div class="cat-group">style</div>
+            <button class="cat" data-cat="adv">
+              <span class="box">[x]</span><span class="sample adv">adverbs</span
+              ><span class="lead"></span><span class="cnt"></span>
+            </button>
+            <button class="cat" data-cat="pas">
+              <span class="box">[x]</span><span class="sample pas">passive voice</span
+              ><span class="lead"></span><span class="cnt"></span>
+            </button>
+            <button class="cat" data-cat="wordy">
+              <span class="box">[x]</span><span class="sample wordy">wordy / filler</span
+              ><span class="lead"></span><span class="cnt"></span>
+            </button>
+            <div class="cat-group">correctness</div>
+            <button class="cat" data-cat="spell">
+              <span class="box">[x]</span><span class="sample spell">spelling</span
+              ><span class="lead"></span><span class="cnt"></span>
+            </button>
+            <button class="cat" data-cat="gram">
+              <span class="box">[x]</span><span class="sample gram">grammar</span
+              ><span class="lead"></span><span class="cnt"></span>
+            </button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="status">
+      <div class="seg mode" id="modeSeg">WRITE</div>
+      <div class="arrow" id="modeArrow" style="--from: var(--accent); --to: var(--bg-4)"></div>
+      <div class="seg b">on-cutting.md</div>
+      <div class="arrow" style="--from: var(--bg-4); --to: var(--bg-2)"></div>
+      <div class="seg c"><span class="mod">[+]</span></div>
+      <div class="seg c issues edit-only">
+        <span class="e" id="stErr"></span><span class="dot">·</span
+        ><span class="w" id="stWarn"></span>
+      </div>
+      <div class="spacer"></div>
+      <div class="seg c">
+        <span id="stWords"></span><span class="dot">·</span><span id="stRead"></span
+        ><span class="edit-only"
+          ><span class="dot">·</span><span id="stChars"></span><span class="dot">·</span
+          ><span id="stSent"></span
+        ></span>
+      </div>
+      <div class="arrow l" style="--from: var(--bg-4); --to: var(--bg-2)"></div>
+      <div class="seg b">markdown</div>
+      <div class="arrow l" id="modeArrowR" style="--from: var(--accent); --to: var(--bg-4)"></div>
+      <div class="seg mode" id="posSeg">42:37</div>
+    </div>
+
+    <div class="pop" id="pop"></div>
+    <div class="tip" id="tip"></div>
+
+    <script>
+      const body = document.body;
+      const doc = document.getElementById("doc");
+      const pop = document.getElementById("pop");
+
+      const info = {
+        vhard: {
+          t: "Very hard sentence",
+          c: "var(--spell)",
+          msg: (el) =>
+            `${words(el.textContent)} words, three clauses. Readers lose the subject before they reach the verb. Try a stop before “which” and another before “should”.`,
+        },
+        hard: {
+          t: "Hard sentence",
+          c: "var(--accent)",
+          msg: (el) => `${words(el.textContent)} words. Consider splitting it.`,
+        },
+        adv: {
+          t: "Adverb",
+          c: "var(--adv)",
+          msg: () => "Use a stronger verb, or cut it.",
+          fixes: () => ["cut"],
+        },
+        pas: {
+          t: "Passive voice",
+          c: "var(--pas)",
+          msg: () => "Who does the action? Name them and make them the subject.",
+        },
+        wordy: { t: "Wordy", c: "var(--wordy)" },
+        spell: { t: "Spelling", c: "var(--spell)" },
+        gram: { t: "Grammar", c: "var(--gram)" },
+      };
+
+      const detail = {
+        w1: { msg: "Qualifier. It weakens the sentence without adding meaning.", fixes: ["cut"] },
+        w2: { msg: "“utilize” has a simpler alternative.", fixes: ["use"] },
+        w3: { msg: "Filler word.", fixes: ["cut"] },
+        sp1: { msg: "Unknown word.", fixes: ["the", "tech", "ten"], dict: true },
+        sp2: { msg: "Unknown word.", fixes: ["sentence"], dict: true },
+        g1: { msg: "Comparisons use “than”, not “then”.", fixes: ["than"] },
+        g2: { msg: "“Their” is possessive. Here you need “There”.", fixes: ["There are"] },
+        g3: {
+          msg: "Comma splice: two independent clauses joined by a comma.",
+          fixes: ["; see", ". See"],
+        },
+      };
+
+      const TARGET = 8;
+
+      const tips = {
+        grade: () => `
+      <b>Grade level</b>
+      Roughly the years of US schooling a reader needs to follow the text on the first read. Lower is easier. It measures sentence and word length, not quality.
+      <p>
+        <span class="row"><span>good</span><span>at or under your target (≤ ${TARGET}). Most adults read it without effort.</span></span>
+        <span class="row"><span>ok</span><span>${TARGET + 1}–${TARGET + 3}. Fine for an engaged reader, but it takes work.</span></span>
+        <span class="row"><span>dense</span><span>${TARGET + 4}+. Academic or legal territory. Readers skim or quit.</span></span>
+      </p>
+      <p>For reference: newspapers aim for about 8. Technical docs often sit at 10–12.</p>`,
+        meter: () => `
+      <b>Grade meter</b>
+      Filled cells are the current grade. The bright bar is your target (${TARGET}). Change the target in settings.`,
+        ari: () => `
+      <b>Automated Readability Index</b>
+      Uses characters per word and words per sentence.
+      <p>It counts letters, not syllables, so the same text always gets the same score. Steinbeck uses ARI for the headline grade and for the hard / very hard sentence marks, so the marks and the score always agree.</p>`,
+        fk: () => `
+      <b>Flesch–Kincaid grade</b>
+      Uses syllables per word and words per sentence. The most common metric (Word, many style checkers).
+      <p>English syllable counts are estimates, so it can drift by a grade on technical or unusual words. Shown for comparison.</p>`,
+        cl: () => `
+      <b>Coleman–Liau index</b>
+      Uses letters per 100 words and sentences per 100 words.
+      <p>Tends to score text with long words higher than the others do. Shown for comparison.</p>`,
+        avg: () => `
+      <b>Average sentence length</b>
+      Plain-language guides suggest 15–20 words on average.
+      <p>The average is not everything: a mix of short and long sentences reads better than all medium ones.</p>`,
+        hard: () => `
+      <b>Hard sentence</b>
+      This sentence alone scores grade 10–13. Readers can follow it, but they slow down. Look for a place to split it.`,
+        vhard: () => `
+      <b>Very hard sentence</b>
+      This sentence alone scores grade 14 or higher. Readers often lose the subject before they reach the verb. Split it.`,
+      };
+
+      const words = (s) => (s.match(/[A-Za-z’']+/g) || []).length;
+
+      function catOf(el) {
+        return ["vhard", "hard", "adv", "pas", "wordy", "spell", "gram"].find((c) =>
+          el.classList.contains(c),
+        );
+      }
+
+      function prose() {
+        return [...doc.querySelectorAll(".blk:not([data-code]), .li")]
+          .map((b) =>
+            [...b.childNodes]
+              .filter(
+                (n) =>
+                  !(
+                    n.classList &&
+                    (n.classList.contains("md") ||
+                      n.classList.contains("h1") ||
+                      n.classList.contains("h2"))
+                  ),
+              )
+              .map((n) => n.textContent)
+              .join(""),
+          )
+          .join("\n")
+          .replace(/https?:\S+/g, "");
+      }
+
+      function syllables(w) {
+        w = w.toLowerCase().replace(/[^a-z]/g, "");
+        if (w.length <= 3) return 1;
+        w = w.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, "").replace(/^y/, "");
+        return Math.max(1, (w.match(/[aeiouy]{1,2}/g) || []).length);
+      }
+
+      function stats() {
+        const text = prose();
+        const ws = text.match(/[A-Za-z’']+/g) || [];
+        const sents = text.split(/[.!?]+(?:\s|$)/).filter((s) => words(s) > 0).length;
+        const letters = ws.join("").replace(/[’']/g, "").length;
+        const syl = ws.reduce((a, w) => a + syllables(w), 0);
+        const W = ws.length,
+          S = Math.max(1, sents);
+        const ari = 4.71 * (letters / W) + 0.5 * (W / S) - 21.43;
+        const fk = 0.39 * (W / S) + 11.8 * (syl / W) - 15.59;
+        const L = (letters / W) * 100,
+          SS = (S / W) * 100;
+        const cl = 0.0588 * L - 0.296 * SS - 15.8;
+        const allText = [...doc.querySelectorAll(".blk, .li")].map((b) => b.textContent).join("\n");
+        return {
+          words: W,
+          chars: allText.length,
+          sents: S,
+          ari,
+          fk,
+          cl,
+          read: Math.max(1, Math.round(W / 238)),
+        };
+      }
+
+      function render() {
+        const s = stats();
+        const g = Math.max(1, Math.round(s.ari));
+        document.getElementById("gradeN").textContent = g;
+        document.getElementById("gradeLbl").textContent =
+          "Grade " + g + " · " + (g <= TARGET ? "good" : g <= TARGET + 3 ? "ok" : "dense");
+        document.getElementById("targetN").textContent = TARGET;
+        const cells = 16,
+          target = TARGET;
+        let m = "";
+        for (let i = 1; i <= cells; i++) {
+          const ch = i <= g ? "█" : "░";
+          const cls = i === target ? "t" : i <= g ? "f" : "e";
+          m += `<span class="${cls}">${i === target && i > g ? "▏" : ch}</span>`;
+        }
+        document.getElementById("meter").innerHTML = m;
+        document.getElementById("alts").innerHTML = [
+          ["ari", "automated readability (ARI)", s.ari.toFixed(1), true],
+          ["fk", "flesch–kincaid grade", s.fk.toFixed(1)],
+          ["cl", "coleman–liau", s.cl.toFixed(1)],
+          ["avg", "avg words / sentence", (s.words / s.sents).toFixed(1)],
+        ]
+          .map(
+            ([tip, k, v, hl]) =>
+              `<span data-tip="${tip}">${k}</span><span class="${hl ? "hl" : ""}">${v}</span>`,
+          )
+          .join("");
+
+        document.getElementById("stWords").textContent = s.words.toLocaleString() + " words";
+        document.getElementById("stRead").textContent = s.read + " min";
+        document.getElementById("stChars").textContent = s.chars.toLocaleString() + " chars";
+        document.getElementById("stSent").textContent = s.sents + " sentences";
+
+        const count = (c) => doc.querySelectorAll(".m." + c).length;
+        document
+          .querySelectorAll(".cat")
+          .forEach((b) => (b.querySelector(".cnt").textContent = count(b.dataset.cat)));
+        const err = count("spell") + count("gram");
+        const warn = ["vhard", "hard", "adv", "pas", "wordy"].reduce((a, c) => a + count(c), 0);
+        document.getElementById("stErr").textContent = "✗ " + err;
+        document.getElementById("stWarn").textContent = "△ " + warn;
+      }
+
+      function setMode(mode) {
+        body.classList.toggle("edit", mode === "edit");
+        body.classList.toggle("write", mode === "write");
+        document.getElementById("modeSeg").textContent = mode.toUpperCase();
+        const col = mode === "edit" ? "var(--edit)" : "var(--accent)";
+        document.getElementById("modeArrow").style.setProperty("--from", col);
+        document.getElementById("modeArrowR").style.setProperty("--from", col);
+        document.getElementById("posSeg").style.background = col;
+        document.getElementById("caret").style.display = mode === "write" ? "" : "none";
+        hidePop();
+      }
+
+      function hidePop() {
+        pop.classList.remove("show");
+      }
+
+      function showPop(anchor, html) {
+        pop.innerHTML = html;
+        pop.classList.add("show");
+        const r = anchor.getBoundingClientRect();
+        const top =
+          r.bottom + 8 + pop.offsetHeight > innerHeight
+            ? r.top - pop.offsetHeight - 8
+            : r.bottom + 8;
+        pop.style.top = top + "px";
+        pop.style.left = Math.min(r.left, innerWidth - 360) + "px";
+      }
+
+      function markPop(el) {
+        const cat = catOf(el);
+        const base = info[cat];
+        const d = detail[el.dataset.id] || {};
+        const msg = d.msg || base.msg(el);
+        const fixes = d.fixes || (base.fixes ? base.fixes() : []);
+        const src =
+          cat === "spell" ? "spellcheck · en_US" : cat === "gram" ? "harper" : "steinbeck lint";
+        showPop(
+          el,
+          `
+      <div class="t" style="color:${base.c}">${base.t}</div>
+      <div class="msg">${msg}</div>
+      <div class="acts">
+        ${fixes.map((f) => `<button class="fix" data-fix="${f}" data-for="${el.dataset.id}">${f === "cut" ? "✂ cut" : "→ " + f}</button>`).join("")}
+        ${d.dict ? `<button data-dict="${el.dataset.id}">+ dictionary</button>` : ""}
+        <button data-ignore="${el.dataset.id}">ignore</button>
+      </div>
+      <div class="src">${src}</div>`,
+        );
+      }
+
+      const tip = document.getElementById("tip");
+
+      document.addEventListener("mouseover", (e) => {
+        const t = e.target.closest("[data-tip]");
+        if (!t) return tip.classList.remove("show");
+        tip.innerHTML = tips[t.dataset.tip]();
+        tip.classList.add("show");
+        const r = t.getBoundingClientRect();
+        const top =
+          r.bottom + 8 + tip.offsetHeight > innerHeight
+            ? r.top - tip.offsetHeight - 8
+            : r.bottom + 8;
+        tip.style.top = top + "px";
+        tip.style.left = Math.max(8, Math.min(r.left, innerWidth - tip.offsetWidth - 12)) + "px";
+      });
+
+      function unwrap(el) {
+        el.replaceWith(...el.childNodes);
+      }
+
+      doc.addEventListener("click", (e) => {
+        if (!body.classList.contains("edit")) return;
+        const m = e.target.closest(".m:not(.off)");
+        if (!m) return hidePop();
+        e.stopPropagation();
+        markPop(m);
+      });
+
+      pop.addEventListener("click", (e) => {
+        const b = e.target.closest("button");
+        if (!b) return;
+        if (b.dataset.fix) {
+          const el = doc.querySelector(`[data-id="${b.dataset.for}"]`);
+          if (b.dataset.fix === "cut") {
+            const prev = el.parentElement.tagName === "EM" ? el.parentElement : el;
+            const target = prev.tagName === "EM" ? prev : el;
+            if (target.tagName === "EM") {
+              target.previousSibling?.remove();
+              target.nextSibling?.remove();
+            }
+            const next = target.nextSibling;
+            if (next && next.nodeType === 3) next.textContent = next.textContent.replace(/^ /, "");
+            target.remove();
+          } else {
+            el.replaceWith(document.createTextNode(b.dataset.fix));
+          }
+        }
+        const id = b.dataset.ignore || b.dataset.dict;
+        if (id) unwrap(doc.querySelector(`[data-id="${id}"]`));
+        hidePop();
+        render();
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".pop, .doc")) hidePop();
+      });
+
+      document.querySelectorAll(".cat").forEach((b) => {
+        const cat = b.dataset.cat;
+        b.addEventListener("mouseenter", () => {
+          body.dataset.focus = cat;
+          doc.querySelectorAll(".m." + cat).forEach((m) => m.classList.add("lit"));
+        });
+        b.addEventListener("mouseleave", () => {
+          delete body.dataset.focus;
+          doc.querySelectorAll(".m.lit").forEach((m) => m.classList.remove("lit"));
+        });
+        b.addEventListener("click", () => {
+          const off = b.classList.toggle("off");
+          b.querySelector(".box").textContent = off ? "[ ]" : "[x]";
+          doc.querySelectorAll(".m." + cat).forEach((m) => m.classList.toggle("off", off));
+        });
+      });
+
+      document
+        .getElementById("modeSeg")
+        .addEventListener("click", () =>
+          setMode(body.classList.contains("edit") ? "write" : "edit"),
+        );
+
+      document.getElementById("themeBtn").addEventListener("click", () => {
+        const dark = body.classList.toggle("dark");
+        body.classList.toggle("light", !dark);
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "e") {
+          e.preventDefault();
+          setMode(body.classList.contains("edit") ? "write" : "edit");
+        }
+        if (e.key === "Escape") hidePop();
+      });
+
+      if (matchMedia("(prefers-color-scheme: light)").matches) {
+        body.classList.replace("dark", "light");
+      }
+
+      setMode("write");
+      render();
+    </script>
+  </body>
+</html>
