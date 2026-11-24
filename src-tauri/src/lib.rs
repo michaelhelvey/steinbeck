@@ -1,3 +1,5 @@
+pub mod analysis;
+
 /// Builds and runs the Steinbeck Tauri application.
 ///
 /// In debug builds, this function also attaches the log plugin at `Info` level.
